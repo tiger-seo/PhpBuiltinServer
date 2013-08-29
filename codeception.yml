@@ -12,7 +12,7 @@ settings:
 modules:
     config:
         PhpBrowser:
-            url: http://localhost:8000/
+            url: http://localhost:8000
 extensions:
     enabled:
         - Codeception\Extension\PhpBuiltinServer

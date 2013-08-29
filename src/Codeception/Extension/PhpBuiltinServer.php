@@ -75,8 +75,10 @@ class PhpBuiltinServer extends Extension
         exec('set', $rawEnv);
         $env = [];
         foreach ($rawEnv as $envVar) {
-            list($name, $value) = explode('=', $envVar);
-            $env[$name] = $value;
+            if (strpos($envVar, '=') !== false) {
+                list($name, $value) = explode('=', $envVar);
+                $env[$name] = $value;
+            }
         }
 
         $this->resource = proc_open($command, $descriptorspec, $this->pipes, null, $env, $other_options);
