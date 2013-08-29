@@ -72,15 +72,7 @@ class PhpBuiltinServer extends Extension
             realpath($this->config['documentRoot'])
         );
 
-        exec('set', $rawEnv);
-        $env = [];
-        foreach ($rawEnv as $envVar) {
-            if (strpos($envVar, '=') !== false) {
-                list($name, $value) = explode('=', $envVar);
-                $env[$name] = $value;
-            }
-        }
-
+        $env = $this->getEnvironment();
         $this->resource = proc_open($command, $descriptorspec, $this->pipes, null, $env, $other_options);
         if (!is_resource($this->resource)) {
             throw new ExtensionException($this, 'Failed to start server.');
@@ -89,6 +81,23 @@ class PhpBuiltinServer extends Extension
             proc_close($this->resource);
             throw new ExtensionException($this, 'Failed to start server.');
         }
+    }
+
+    /**
+     * @return array
+     */
+    private function getEnvironment()
+    {
+        exec($this->isWindows() ? 'set' : 'env', $rawEnv);
+        $env = [];
+        foreach ($rawEnv as $envVar) {
+            if (strpos($envVar, '=') !== false) {
+                list($name, $value) = explode('=', $envVar);
+                $env[$name] = $value;
+            }
+        }
+
+        return $env;
     }
 
     private function stopServer()
