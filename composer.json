@@ -1,0 +1,26 @@
+{
+    "name": "codeception/remote-debug",
+    "description": "Remote debug extension for Codeception",
+    "minimum-stability": "stable",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "tiger-seo",
+            "email": "tiger.seo@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "require-dev": {
+        "codeception/codeception": "1.6.x"
+    },
+    "autoload": {
+        "psr-0": {
+            "Codeception": "src"
+        }
+    },
+    "config": {
+        "bin-dir": "bin"
+    }
+}

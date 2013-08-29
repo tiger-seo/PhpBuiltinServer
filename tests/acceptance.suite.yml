@@ -1,0 +1,5 @@
+class_name: WebGuy
+modules:
+    enabled:
+        - PhpBrowser
+        - WebHelper
