@@ -43,9 +43,17 @@ class PhpBuiltinServer extends Extension
         $this->stopServer();
     }
 
-    private function isWindows()
+    /**
+     * @return string
+     */
+    private function getCommand()
     {
-        return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
+        return sprintf(
+            PHP_BINARY . ' -S %s:%s -t %s',
+            $this->config['hostname'],
+            $this->config['port'],
+            realpath($this->config['documentRoot'])
+        );
     }
 
     private function startServer()
@@ -54,26 +62,13 @@ class PhpBuiltinServer extends Extension
             return;
         }
 
-        $descriptorspec = [
+        $command        = $this->getCommand();
+        $descriptorSpec = [
             ['pipe', 'r'],
-            ['file', Configuration::logDir() . 'phpbuiltinserver.output.txt', 'a'],
+            ['file', Configuration::logDir() . 'phpbuiltinserver.output.txt', 'w'],
             ['file', Configuration::logDir() . 'phpbuiltinserver.errors.txt', 'a']
         ];
-
-        $other_options = [];
-        if ($this->isWindows()) {
-            $other_options['bypass_shell'] = true;
-        }
-
-        $command = sprintf(
-            PHP_BINARY . ' -S %s:%s -t %s',
-            $this->config['hostname'],
-            $this->config['port'],
-            realpath($this->config['documentRoot'])
-        );
-
-        $env = $this->getEnvironment();
-        $this->resource = proc_open($command, $descriptorspec, $this->pipes, null, $env, $other_options);
+        $this->resource = proc_open($command, $descriptorSpec, $this->pipes, null, null, ['bypass_shell' => true]);
         if (!is_resource($this->resource)) {
             throw new ExtensionException($this, 'Failed to start server.');
         }
@@ -81,23 +76,6 @@ class PhpBuiltinServer extends Extension
             proc_close($this->resource);
             throw new ExtensionException($this, 'Failed to start server.');
         }
-    }
-
-    /**
-     * @return array
-     */
-    private function getEnvironment()
-    {
-        exec($this->isWindows() ? 'set' : 'env', $rawEnv);
-        $env = [];
-        foreach ($rawEnv as $envVar) {
-            if (strpos($envVar, '=') !== false) {
-                list($name, $value) = explode('=', $envVar);
-                $env[$name] = $value;
-            }
-        }
-
-        return $env;
     }
 
     private function stopServer()
