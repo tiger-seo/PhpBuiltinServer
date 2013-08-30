@@ -81,7 +81,10 @@ class PhpBuiltinServer extends Extension
     private function stopServer()
     {
         if ($this->resource !== null) {
-            proc_terminate($this->resource);
+            foreach ($this->pipes AS $pipe) {
+                fclose($pipe);
+            }
+            proc_terminate($this->resource, 2);
             unset($this->resource);
         }
     }
