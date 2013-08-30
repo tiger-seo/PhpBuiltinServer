@@ -1,6 +1,6 @@
 {
-    "name": "codeception/remote-debug",
-    "description": "Remote debug extension for Codeception",
+    "name": "codeception/phpbuiltinserver",
+    "description": "PhpBuiltinServer extension for Codeception",
     "minimum-stability": "stable",
     "license": "MIT",
     "authors": [
