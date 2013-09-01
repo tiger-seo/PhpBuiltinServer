@@ -1,6 +1,7 @@
 {
     "name": "codeception/phpbuiltinserver",
     "description": "PhpBuiltinServer extension for Codeception",
+    "keywords": ["codeception"],
     "minimum-stability": "stable",
     "license": "MIT",
     "authors": [
@@ -10,9 +11,7 @@
         }
     ],
     "require": {
-        "php": ">=5.4.0"
-    },
-    "require-dev": {
+        "php": ">=5.4.0",
         "codeception/codeception": "1.6.x"
     },
     "autoload": {
