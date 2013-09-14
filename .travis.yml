@@ -4,7 +4,12 @@ php:
   - 5.4
   - 5.5
 
+env:
+  - CODECEPTION_VERSION="1.6.*"
+  - CODECEPTION_VERSION="dev-master"
+
 before_script:
-  - composer install -n --prefer-source
+  - composer require --no-update codeception/codeception:${CODECEPTION_VERSION}
+  - composer install -n --prefer-dist --dev
 
 script: "bin/codecept run"
