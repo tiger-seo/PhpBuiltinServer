@@ -9,7 +9,7 @@ env:
   - CODECEPTION_VERSION="dev-master"
 
 before_script:
-  - composer require --no-update codeception/codeception:${CODECEPTION_VERSION}
   - composer install -n --prefer-dist --dev
+  - composer require codeception/codeception:${CODECEPTION_VERSION}
 
 script: "bin/codecept run"
