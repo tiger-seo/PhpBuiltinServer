@@ -5,6 +5,11 @@ Codeception extension for starting and stopping php built-in server
 
 [![Build Status](https://secure.travis-ci.org/tiger-seo/PhpBuiltinServer.png?branch=master)](http://travis-ci.org/tiger-seo/PhpBuiltinServer)
 
+## Minimum requirements
+
+* Codeception 1.6.4
+* PHP 5.4
+
 ## Installation
 
 1. Install [Codeception](http://codeception.com) via Composer
