@@ -8,7 +8,7 @@ Codeception extension for starting and stopping php built-in server
 ## Installation
 
 1. Install [Codeception](http://codeception.com) via Composer
-2. Add `codeception/phpbuiltinserver: "dev-master"` to your `composer.json`
+2. Add `codeception/phpbuiltinserver: "*"` to your `composer.json`
 3. Run `composer install`
 4. Include extensions into `codeception.yml` configuration:
 
