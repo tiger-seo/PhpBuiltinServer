@@ -17,7 +17,7 @@ Codeception extension for starting and stopping php built-in server
 3. Run `composer install`
 4. Include extensions into `codeception.yml` configuration:
 
-Sample:
+## Configuration
 
 ``` yaml
 paths:
