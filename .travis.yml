@@ -6,6 +6,7 @@ php:
 
 env:
   - CODECEPTION_VERSION="1.6.*"
+  - CODECEPTION_VERSION="1.7.*"
   - CODECEPTION_VERSION="dev-master"
 
 before_script:
