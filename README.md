@@ -19,18 +19,39 @@ Codeception extension for starting and stopping php built-in server
 
 ## Configuration
 
+### general example
+
 ``` yaml
 paths:
-    tests: tests
-    log: tests/_log
-    data: tests/_data
-    helpers: tests/_helpers
+    tests: .
+    log: _log
+    data: _data
+    helpers: _helpers
 extensions:
     enabled:
-      - Codeception\Extension\PhpBuiltinServer
+        - Codeception\Extension\PhpBuiltinServer
     config:
-      Codeception\Extension\PhpBuiltinServer:
-          hostname: localhost
-          port: 8000
-          documentRoot: tests/_data
+        Codeception\Extension\PhpBuiltinServer:
+            hostname: localhost
+            port: 8000
+            documentRoot: _data
+```
+
+### example for projects based on Symfony
+``` yaml
+paths:
+    tests: .
+    log: _log
+    data: _data
+    helpers: _helpers
+extensions:
+    enabled:
+        - Codeception\Extension\PhpBuiltinServer
+    config:
+        Codeception\Extension\PhpBuiltinServer:
+            hostname: localhost
+            port: 8000
+            documentRoot: ../web
+            router: ../web/app.php
+            directoryIndex: app.php
 ```
