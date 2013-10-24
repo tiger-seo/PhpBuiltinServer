@@ -48,12 +48,27 @@ class PhpBuiltinServer extends Extension
      */
     private function getCommand()
     {
-        return sprintf(
-            PHP_BINARY . ' -S %s:%s -t %s',
+        $parameters = [];
+        if (isset($this->config['router'])) {
+            $parameters[] = 'codecept.user_router="' . $this->config['router'] . '"';
+        }
+        if (isset($this->config['directoryIndex'])) {
+            $parameters[] = 'codecept.directory_index="' . $this->config['directoryIndex'] . '"';
+        }
+        if ($this->isRemoteDebug()) {
+            $parameters[] = 'xdebug.remote_enable=1';
+        }
+
+        $command = sprintf(
+            PHP_BINARY . ' %s -S %s:%s -t %s %s',
+            $parameters ? '-d' . implode(' -d', $parameters) : '',
             $this->config['hostname'],
             $this->config['port'],
-            realpath($this->config['documentRoot'])
+            realpath($this->config['documentRoot']),
+            __DIR__ . '/Router.php'
         );
+
+        return $command;
     }
 
     private function startServer()
@@ -86,6 +101,16 @@ class PhpBuiltinServer extends Extension
             }
             proc_terminate($this->resource, 2);
             unset($this->resource);
+        }
+    }
+
+    private function isRemoteDebug()
+    {
+        // compatibility with Codeception before 1.7.1
+        if (method_exists('\Codeception\Configuration', 'isExtensionEnabled')) {
+            return Configuration::isExtensionEnabled('Codeception\Extension\RemoteDebug');
+        } else {
+            return false;
         }
     }
 
