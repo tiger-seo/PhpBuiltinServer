@@ -1,7 +1,7 @@
 PhpBuiltinServer
 ================
 
-Codeception extension for starting and stopping php built-in server
+Codeception extension to start and stop PHP built-in web server for your tests.
 
 [![Build Status](https://secure.travis-ci.org/tiger-seo/PhpBuiltinServer.png?branch=master)](http://travis-ci.org/tiger-seo/PhpBuiltinServer)
 
