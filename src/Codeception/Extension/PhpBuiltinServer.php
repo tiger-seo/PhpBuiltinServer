@@ -26,6 +26,13 @@ class PhpBuiltinServer extends Extension
 
         parent::__construct($config, $options);
 
+        if (
+            !array_key_exists('startDelay', $this->config)
+            || !(is_int($this->config['startDelay']) || ctype_digit($this->config['startDelay']))
+        ) {
+            $this->config['startDelay'] = 1;
+        }
+
         $this->startServer();
 
         $resource = $this->resource;
@@ -48,20 +55,20 @@ class PhpBuiltinServer extends Extension
      */
     private function getCommand()
     {
-        $parameters = [];
+        $parameters = '';
         if (isset($this->config['router'])) {
-            $parameters[] = 'codecept.user_router="' . $this->config['router'] . '"';
+            $parameters .= ' -dcodecept.user_router="' . $this->config['router'] . '"';
         }
         if (isset($this->config['directoryIndex'])) {
-            $parameters[] = 'codecept.directory_index="' . $this->config['directoryIndex'] . '"';
+            $parameters .= ' -dcodecept.directory_index="' . $this->config['directoryIndex'] . '"';
         }
         if ($this->isRemoteDebug()) {
-            $parameters[] = 'xdebug.remote_enable=1';
+            $parameters .= ' -dxdebug.remote_enable=1';
         }
 
         $command = sprintf(
             PHP_BINARY . ' %s -S %s:%s -t %s %s',
-            $parameters ? '-d' . implode(' -d', $parameters) : '',
+            $parameters,
             $this->config['hostname'],
             $this->config['port'],
             realpath($this->config['documentRoot']),
@@ -92,7 +99,9 @@ class PhpBuiltinServer extends Extension
             throw new ExtensionException($this, 'Failed to start server.');
         }
 
-        sleep(1);
+        if ($this->config['startDelay'] > 0) {
+            sleep($this->config['startDelay']);
+        }
     }
 
     private function stopServer()
@@ -118,6 +127,6 @@ class PhpBuiltinServer extends Extension
 
     public function beforeSuite()
     {
-        // dummy to keep link to this instance, so that it wouldn't be destroyed immediately
+        // dummy to keep reference to this instance, so that it wouldn't be destroyed immediately
     }
 }

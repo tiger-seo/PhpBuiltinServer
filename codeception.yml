@@ -21,3 +21,4 @@ extensions:
             hostname: localhost
             port: 8000
             documentRoot: tests/_data
+            startDelay: 1

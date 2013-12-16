@@ -35,6 +35,7 @@ extensions:
             hostname: localhost
             port: 8000
             documentRoot: _data
+            startDelay: 1
 ```
 
 ### example for projects based on Symfony
@@ -54,4 +55,5 @@ extensions:
             documentRoot: ../web
             router: ../web/app.php
             directoryIndex: app.php
+            startDelay: 1
 ```
