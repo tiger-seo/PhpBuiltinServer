@@ -19,9 +19,14 @@ class Router
 
         if ($accessLog) {
             $logEntry = sprintf(
-                '%s %s' . PHP_EOL,
+                '%s %s "%s %s %s" %s %s' . PHP_EOL,
+                $_SERVER['REMOTE_ADDR'],
                 date('c'),
-                $requestUri
+                $_SERVER['REQUEST_METHOD'],
+                $_SERVER['REQUEST_URI'],
+                $_SERVER['SERVER_PROTOCOL'],
+                $_SERVER['HTTP_REFERER'],
+                $_SERVER['HTTP_USER_AGENT']
             );
             file_put_contents($accessLog, $logEntry, FILE_APPEND);
         }
