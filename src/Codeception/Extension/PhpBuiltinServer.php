@@ -65,6 +65,7 @@ class PhpBuiltinServer extends Extension
         if ($this->isRemoteDebug()) {
             $parameters .= ' -dxdebug.remote_enable=1';
         }
+        $parameters .= ' -dcodecept.access_log="' . Configuration::logDir() . 'phpbuiltinserver.access_log.txt' . '"';
 
         $command = sprintf(
             PHP_BINARY . ' %s -S %s:%s -t %s %s',
