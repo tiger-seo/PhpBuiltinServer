@@ -62,6 +62,9 @@ class PhpBuiltinServer extends Extension
         if (isset($this->config['directoryIndex'])) {
             $parameters .= ' -dcodecept.directory_index="' . $this->config['directoryIndex'] . '"';
         }
+        if (isset($this->config['phpIni'])) {
+            $parameters .= ' --php-ini "' . $this->config['phpIni'] . '"';
+        }
         if ($this->isRemoteDebug()) {
             $parameters .= ' -dxdebug.remote_enable=1';
         }
