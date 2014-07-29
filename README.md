@@ -1,9 +1,12 @@
-PhpBuiltinServer
+PhpBuiltinServer [![Latest Stable](https://poser.pugx.org/codeception/phpbuiltinserver/version.png)](https://packagist.org/packages/codeception/phpbuiltinserver) [![Total Downloads](https://poser.pugx.org/codeception/phpbuiltinserver/downloads.png)](https://packagist.org/packages/codeception/phpbuiltinserver)
 ================
 
 Codeception extension to start and stop PHP built-in web server for your tests.
 
-[![Build Status](https://secure.travis-ci.org/tiger-seo/PhpBuiltinServer.png?branch=master)](http://travis-ci.org/tiger-seo/PhpBuiltinServer)
+| Codeception Branch | PhpBuiltinServer Branch | Status |
+| ------- | -------- | -------- |
+| **Codeception 1.x** | **1.1.x** | [![Build Status](https://secure.travis-ci.org/tiger-seo/PhpBuiltinServer.png?branch=v1.1.x)](http://travis-ci.org/tiger-seo/PhpBuiltinServer) |
+| **Codeception 2.x** | **1.2.x** | [![Build Status](https://secure.travis-ci.org/tiger-seo/PhpBuiltinServer.png?branch=master)](http://travis-ci.org/tiger-seo/PhpBuiltinServer) |
 
 ## Minimum requirements
 
@@ -36,6 +39,7 @@ extensions:
             port: 8000
             documentRoot: _data
             startDelay: 1
+            phpIni: /etc/php5/apache2/php.ini
 ```
 
 ### example for projects based on Symfony
@@ -56,4 +60,5 @@ extensions:
             router: ../web/app.php
             directoryIndex: app.php
             startDelay: 1
+            phpIni: /etc/php5/apache2/php.ini
 ```
