@@ -57,4 +57,5 @@ extensions:
             router: ../web/app.php
             directoryIndex: app.php
             startDelay: 1
-phpIni: /etc/php5/apache2/php.ini```
+            phpIni: /etc/php5/apache2/php.ini
+```
