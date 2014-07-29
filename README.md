@@ -36,6 +36,7 @@ extensions:
             port: 8000
             documentRoot: _data
             startDelay: 1
+            phpIni: /etc/php5/apache2/php.ini
 ```
 
 ### example for projects based on Symfony
@@ -56,4 +57,4 @@ extensions:
             router: ../web/app.php
             directoryIndex: app.php
             startDelay: 1
-```
+phpIni: /etc/php5/apache2/php.ini```
