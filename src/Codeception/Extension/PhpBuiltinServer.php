@@ -49,6 +49,13 @@ class PhpBuiltinServer extends Extension
     {
         $this->stopServer();
     }
+    
+    /**
+     * this will prevent cloning
+     */
+    private function __clone()
+    {
+    }
 
     /**
      * @return string
@@ -112,7 +119,9 @@ class PhpBuiltinServer extends Extension
     {
         if ($this->resource !== null) {
             foreach ($this->pipes AS $pipe) {
-                fclose($pipe);
+                if (is_resource($pipe)) {
+                    fclose($pipe);
+                }
             }
             proc_terminate($this->resource, 2);
             unset($this->resource);
