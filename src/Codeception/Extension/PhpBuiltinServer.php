@@ -69,6 +69,9 @@ class PhpBuiltinServer extends Extension
         if (isset($this->config['directoryIndex'])) {
             $parameters .= ' -dcodecept.directory_index=' . escapeshellarg($this->config['directoryIndex']);
         }
+        if (isset($this->config['variableOrder'])) {
+            $parameters .= ' -dvariables_order=' . escapeshellarg($this->config['variableOrder']);
+        }
         if (isset($this->config['phpIni'])) {
             $parameters .= ' --php-ini ' . escapeshellarg($this->config['phpIni']);
         }
@@ -94,13 +97,17 @@ class PhpBuiltinServer extends Extension
             return;
         }
 
-        $command        = $this->getCommand();
-        $descriptorSpec = [
+        $command              = $this->getCommand();
+        $descriptorSpec       = [
             ['pipe', 'r'],
             ['file', Configuration::logDir() . 'phpbuiltinserver.output.txt', 'w'],
             ['file', Configuration::logDir() . 'phpbuiltinserver.errors.txt', 'a']
         ];
-        $this->resource = proc_open($command, $descriptorSpec, $this->pipes, null, null, ['bypass_shell' => true]);
+        $environmentVariables = [];
+        if (isset($this->config['environmentVariables']) && is_array($this->config['environmentVariables'])) {
+            $environmentVariables = $this->config['environmentVariables'];
+        }
+        $this->resource = proc_open($command, $descriptorSpec, $this->pipes, null, $environmentVariables, ['bypass_shell' => true]);
         if (!is_resource($this->resource)) {
             throw new ExtensionException($this, 'Failed to start server.');
         }
