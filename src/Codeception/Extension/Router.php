@@ -34,10 +34,10 @@ class Router
         if (file_exists($filePath) && is_file($filePath)) {
             return false; // serve the requested resource as-is.
         } elseif ($userRouter) {
-            return include $userRouter;
+            return $userRouter;
         } else {
             if (is_dir($filePath) && file_exists($filePath . '/' . $directoryIndex)) {
-                return include $filePath . '/' . $directoryIndex;
+                return $filePath . '/' . $directoryIndex;
             } else {
                 return false; // serve the requested resource as-is.
             }
@@ -45,4 +45,8 @@ class Router
     }
 }
 
-return Router::main();
+$res = Router::main();
+if ($res === false)
+  return $res;
+
+return include $res;
