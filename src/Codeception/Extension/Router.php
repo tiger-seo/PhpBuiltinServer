@@ -7,7 +7,7 @@ namespace Codeception\Extension;
 
 class Router
 {
-    static public function main()
+    public static function main()
     {
         $accessLog      = get_cfg_var('codecept.access_log');
         $userRouter     = get_cfg_var('codecept.user_router');
@@ -46,7 +46,7 @@ class Router
 }
 
 $res = Router::main();
-if ($res === false)
-  return $res;
-
+if ($res === false) {
+    return $res;
+}
 return include $res;
