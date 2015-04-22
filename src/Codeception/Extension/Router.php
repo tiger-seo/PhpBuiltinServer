@@ -36,7 +36,7 @@ class Router
         } elseif ($userRouter) {
             return include $userRouter;
         } else {
-            if (is_dir($filePath) && file_exists($filePath . '/' . $directoryIndex)) {
+            if ($directoryIndex !== "noDirectoryIndex" && is_dir($filePath) && file_exists($filePath . '/' . $directoryIndex)) {
                 return include $filePath . '/' . $directoryIndex;
             } else {
                 return false; // serve the requested resource as-is.

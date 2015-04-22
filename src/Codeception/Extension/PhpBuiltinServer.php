@@ -49,7 +49,7 @@ class PhpBuiltinServer extends Extension
     {
         $this->stopServer();
     }
-    
+
     /**
      * this will prevent cloning
      */
@@ -67,7 +67,11 @@ class PhpBuiltinServer extends Extension
             $parameters .= ' -dcodecept.user_router="' . $this->config['router'] . '"';
         }
         if (isset($this->config['directoryIndex'])) {
-            $parameters .= ' -dcodecept.directory_index="' . $this->config['directoryIndex'] . '"';
+            if ($this->config['directoryIndex'] == false ) {
+                $parameters .= ' -dcodecept.directory_index="noDirectoryIndex"';
+            } else {
+                $parameters .= ' -dcodecept.directory_index="' . $this->config['directoryIndex'] . '"';
+            }
         }
         if (isset($this->config['phpIni'])) {
             $parameters .= ' --php-ini "' . $this->config['phpIni'] . '"';
