@@ -10,7 +10,7 @@ Codeception extension to start and stop PHP built-in web server for your tests.
 
 ## Minimum requirements
 
-* Codeception 1.6.4
+* Codeception 2.0
 * PHP 5.4
 
 ## Installation
@@ -37,7 +37,7 @@ extensions:
         Codeception\Extension\PhpBuiltinServer:
             hostname: localhost
             port: 8000
-            documentRoot: _data
+            documentRoot: tests/_data
             startDelay: 1
             phpIni: /etc/php5/apache2/php.ini
 ```

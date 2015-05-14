@@ -6,6 +6,7 @@
 namespace Codeception\Extension;
 
 use Codeception\Configuration;
+use Codeception\Exception\ModuleConfig as ModuleConfigException;
 use Codeception\Platform\Extension;
 use Codeception\Exception\Extension as ExtensionException;
 
@@ -15,6 +16,7 @@ class PhpBuiltinServer extends Extension
         'suite.before' => 'beforeSuite'
     ];
 
+    private $requiredFields = ['hostname', 'port', 'documentRoot'];
     private $resource;
     private $pipes;
 
@@ -25,6 +27,7 @@ class PhpBuiltinServer extends Extension
         }
 
         parent::__construct($config, $options);
+        $this->validateConfig();
 
         if (
             !array_key_exists('startDelay', $this->config)
@@ -135,6 +138,32 @@ class PhpBuiltinServer extends Extension
             return Configuration::isExtensionEnabled('Codeception\Extension\RemoteDebug');
         } else {
             return false;
+        }
+    }
+
+    private function validateConfig()
+    {
+        $fields = array_keys($this->config);
+        if (array_intersect($this->requiredFields, $fields) != $this->requiredFields) {
+            throw new ModuleConfigException(
+                get_class($this),
+                "\nConfig: " . implode(', ', $this->requiredFields) . " are required\n
+                Please, update the configuration and set all the required fields\n\n"
+            );
+        }
+
+        if (false === realpath($this->config['documentRoot'])) {
+            throw new ModuleConfigException(
+                get_class($this),
+                "\nDocument root does not exist. Please, update the configuration.\n\n"
+            );
+        }
+
+        if (false === is_dir($this->config['documentRoot'])) {
+            throw new ModuleConfigException(
+                get_class($this),
+                "\nDocument root must be a directory. Please, update the configuration.\n\n"
+            );
         }
     }
 
