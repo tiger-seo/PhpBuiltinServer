@@ -7,7 +7,6 @@ php:
 
 env:
   - CODECEPTION_VERSION="2.0.*"
-  - CODECEPTION_VERSION="dev-master"
 
 before_script:
   - composer install -n --prefer-dist --dev
