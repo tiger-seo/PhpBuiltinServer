@@ -21,3 +21,6 @@ extensions:
             port: 8000
             documentRoot: tests/_data
             startDelay: 1
+            environmentVariables:
+                PHPBUILTINSERVER_TEST: 1
+            variableOrder: EGPCS

@@ -52,7 +52,7 @@ class PhpBuiltinServer extends Extension
     {
         $this->stopServer();
     }
-    
+
     /**
      * this will prevent cloning
      */
@@ -67,26 +67,28 @@ class PhpBuiltinServer extends Extension
     {
         $parameters = '';
         if (isset($this->config['router'])) {
-            $parameters .= ' -dcodecept.user_router="' . $this->config['router'] . '"';
+            $parameters .= ' -dcodecept.user_router=' . escapeshellarg($this->config['router']);
         }
         if (isset($this->config['directoryIndex'])) {
-            $parameters .= ' -dcodecept.directory_index="' . $this->config['directoryIndex'] . '"';
+            $parameters .= ' -dcodecept.directory_index=' . escapeshellarg($this->config['directoryIndex']);
+        }
+        if (isset($this->config['variableOrder'])) {
+            $parameters .= ' -dvariables_order=' . escapeshellarg($this->config['variableOrder']);
         }
         if (isset($this->config['phpIni'])) {
-            $parameters .= ' --php-ini "' . $this->config['phpIni'] . '"';
+            $parameters .= ' --php-ini ' . escapeshellarg($this->config['phpIni']);
         }
         if ($this->isRemoteDebug()) {
             $parameters .= ' -dxdebug.remote_enable=1';
         }
-        $parameters .= ' -dcodecept.access_log="' . Configuration::logDir() . 'phpbuiltinserver.access_log.txt' . '"';
+        $parameters .= ' -dcodecept.access_log=' . escapeshellarg(Configuration::logDir() . 'phpbuiltinserver.access_log.txt');
 
         $command = sprintf(
-            PHP_BINARY . ' %s -S %s:%s -t "%s" "%s"',
+            PHP_BINARY . ' %s -S %s -t %s %s',
             $parameters,
-            $this->config['hostname'],
-            $this->config['port'],
-            realpath($this->config['documentRoot']),
-            __DIR__ . '/Router.php'
+            escapeshellarg($this->config['hostname'] . ':' . $this->config['port']),
+            escapeshellarg(realpath($this->config['documentRoot'])),
+            escapeshellarg(__DIR__ . '/Router.php')
         );
 
         return $command;
@@ -98,13 +100,17 @@ class PhpBuiltinServer extends Extension
             return;
         }
 
-        $command        = $this->getCommand();
-        $descriptorSpec = [
+        $command              = $this->getCommand();
+        $descriptorSpec       = [
             ['pipe', 'r'],
             ['file', Configuration::logDir() . 'phpbuiltinserver.output.txt', 'w'],
             ['file', Configuration::logDir() . 'phpbuiltinserver.errors.txt', 'a']
         ];
-        $this->resource = proc_open($command, $descriptorSpec, $this->pipes, null, null, ['bypass_shell' => true]);
+        $environmentVariables = [];
+        if (isset($this->config['environmentVariables']) && is_array($this->config['environmentVariables'])) {
+            $environmentVariables = $this->config['environmentVariables'];
+        }
+        $this->resource = proc_open($command, $descriptorSpec, $this->pipes, null, $environmentVariables, ['bypass_shell' => true]);
         if (!is_resource($this->resource)) {
             throw new ExtensionException($this, 'Failed to start server.');
         }
