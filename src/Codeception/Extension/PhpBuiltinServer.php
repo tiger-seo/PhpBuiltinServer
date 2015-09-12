@@ -80,8 +80,17 @@ class PhpBuiltinServer extends Extension
         }
         $parameters .= ' -dcodecept.access_log="' . Configuration::logDir() . 'phpbuiltinserver.access_log.txt' . '"';
 
+        if (function_exists('pcntl_fork')) {
+            // Platform uses POSIX process handling. Use exec to avoid
+            // controlling the shell process instead of the PHP
+            // interpreter.
+            $exec = 'exec ';
+        } else {
+            $exec = '';
+        }
+
         $command = sprintf(
-            PHP_BINARY . ' %s -S %s:%s -t "%s" "%s"',
+            $exec . PHP_BINARY . ' %s -S %s:%s -t "%s" "%s"',
             $parameters,
             $this->config['hostname'],
             $this->config['port'],
