@@ -80,7 +80,7 @@ class PhpBuiltinServer extends Extension
         }
         $parameters .= ' -dcodecept.access_log="' . Configuration::logDir() . 'phpbuiltinserver.access_log.txt' . '"';
 
-        if (function_exists('pcntl_fork')) {
+        if (PHP_OS !== 'WINNT' && PHP_OS !== 'WIN32') {
             // Platform uses POSIX process handling. Use exec to avoid
             // controlling the shell process instead of the PHP
             // interpreter.
