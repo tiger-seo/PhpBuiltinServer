@@ -36,7 +36,9 @@ class PhpBuiltinServer extends Extension
             $this->config['startDelay'] = 1;
         }
 
-        $this->startServer();
+        if (!array_key_exists('autostart', $this->config) || $this->config['autostart']) {
+            $this->startServer();
+        }
     }
 
     public function __destruct()
