@@ -37,15 +37,6 @@ class PhpBuiltinServer extends Extension
         }
 
         $this->startServer();
-
-        $resource = $this->resource;
-        register_shutdown_function(
-            function () use ($resource) {
-                if (is_resource($resource)) {
-                    proc_terminate($resource);
-                }
-            }
-        );
     }
 
     public function __destruct()
@@ -101,9 +92,13 @@ class PhpBuiltinServer extends Extension
         return $command;
     }
 
-    private function startServer()
+    public function isRunning() {
+        return (isset($this->resource) && $this->resource !== null);
+    }
+
+    public function startServer()
     {
-        if ($this->resource !== null) {
+        if ($this->isRunning()) {
             return;
         }
 
@@ -122,14 +117,23 @@ class PhpBuiltinServer extends Extension
             throw new ExtensionException($this, 'Failed to start server.');
         }
 
+        $resource = $this->resource;
+        register_shutdown_function(
+            function () use ($resource) {
+                if (is_resource($resource)) {
+                    proc_terminate($resource);
+                }
+            }
+        );
+
         if ($this->config['startDelay'] > 0) {
             sleep($this->config['startDelay']);
         }
     }
 
-    private function stopServer()
+    public function stopServer()
     {
-        if ($this->resource !== null) {
+        if ($this->isRunning()) {
             foreach ($this->pipes AS $pipe) {
                 if (is_resource($pipe)) {
                     fclose($pipe);
