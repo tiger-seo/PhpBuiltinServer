@@ -45,7 +45,7 @@ class PhpBuiltinServer extends Extension
     {
         $this->stopServer();
     }
-    
+
     /**
      * this will prevent cloning
      */
@@ -92,6 +92,42 @@ class PhpBuiltinServer extends Extension
         );
 
         return $command;
+    }
+
+    private function isRemoteDebug()
+    {
+        // compatibility with Codeception before 1.7.1
+        if (method_exists('\Codeception\Configuration', 'isExtensionEnabled')) {
+            return Configuration::isExtensionEnabled('Codeception\Extension\RemoteDebug');
+        } else {
+            return false;
+        }
+    }
+
+    private function validateConfig()
+    {
+        $fields = array_keys($this->config);
+        if (array_intersect($this->requiredFields, $fields) != $this->requiredFields) {
+            throw new ModuleConfigException(
+                get_class($this),
+                "\nConfig: " . implode(', ', $this->requiredFields) . " are required\n
+                Please, update the configuration and set all the required fields\n\n"
+            );
+        }
+
+        if (false === realpath($this->config['documentRoot'])) {
+            throw new ModuleConfigException(
+                get_class($this),
+                "\nDocument root does not exist. Please, update the configuration.\n\n"
+            );
+        }
+
+        if (false === is_dir($this->config['documentRoot'])) {
+            throw new ModuleConfigException(
+                get_class($this),
+                "\nDocument root must be a directory. Please, update the configuration.\n\n"
+            );
+        }
     }
 
     public function isRunning() {
@@ -143,42 +179,6 @@ class PhpBuiltinServer extends Extension
             }
             proc_terminate($this->resource, 2);
             unset($this->resource);
-        }
-    }
-
-    private function isRemoteDebug()
-    {
-        // compatibility with Codeception before 1.7.1
-        if (method_exists('\Codeception\Configuration', 'isExtensionEnabled')) {
-            return Configuration::isExtensionEnabled('Codeception\Extension\RemoteDebug');
-        } else {
-            return false;
-        }
-    }
-
-    private function validateConfig()
-    {
-        $fields = array_keys($this->config);
-        if (array_intersect($this->requiredFields, $fields) != $this->requiredFields) {
-            throw new ModuleConfigException(
-                get_class($this),
-                "\nConfig: " . implode(', ', $this->requiredFields) . " are required\n
-                Please, update the configuration and set all the required fields\n\n"
-            );
-        }
-
-        if (false === realpath($this->config['documentRoot'])) {
-            throw new ModuleConfigException(
-                get_class($this),
-                "\nDocument root does not exist. Please, update the configuration.\n\n"
-            );
-        }
-
-        if (false === is_dir($this->config['documentRoot'])) {
-            throw new ModuleConfigException(
-                get_class($this),
-                "\nDocument root must be a directory. Please, update the configuration.\n\n"
-            );
         }
     }
 

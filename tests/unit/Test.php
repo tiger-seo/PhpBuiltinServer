@@ -32,8 +32,8 @@ class Test extends \Codeception\TestCase\Test
         $this->setExpectedExceptionRegExp('Codeception\Exception\ModuleConfig', '/Document root does not exist/');
 
         $config = [
-            'hostname' => 'localhost',
-            'port' => '8000',
+            'hostname'     => 'localhost',
+            'port'         => '8000',
             'documentRoot' => 'notexistingdir'
         ];
 
@@ -45,11 +45,37 @@ class Test extends \Codeception\TestCase\Test
         $this->setExpectedExceptionRegExp('Codeception\Exception\ModuleConfig', '/Document root must be a directory/');
 
         $config = [
-            'hostname' => 'localhost',
-            'port' => '8000',
+            'hostname'     => 'localhost',
+            'port'         => '8000',
             'documentRoot' => 'codeception.yml'
         ];
 
         new PhpBuiltinServer($config, []);
+    }
+
+    public function testServerIsNotRunIfAutostartConfigIsFalse()
+    {
+        $config = [
+            'hostname'     => 'localhost',
+            'port'         => '8000',
+            'autostart'    => false,
+            'documentRoot' => 'tests/_data'
+        ];
+
+        $server = new PhpBuiltinServer($config, []);
+        $this->assertFalse($server->isRunning());
+    }
+
+    public function testServerIsRunIfAutostartConfigIsTrue()
+    {
+        $config = [
+            'hostname'     => 'localhost',
+            'port'         => '8000',
+            'autostart'    => true,
+            'documentRoot' => 'tests/_data'
+        ];
+
+        $server = new PhpBuiltinServer($config, []);
+        $this->assertTrue($server->isRunning());
     }
 }
