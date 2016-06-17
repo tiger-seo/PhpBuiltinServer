@@ -86,11 +86,12 @@ class PhpBuiltinServer extends Extension
         }
 
         $command = sprintf(
-            $exec . PHP_BINARY . ' %s -S %s:%s -t "%s"',
+            $exec . PHP_BINARY . ' %s -S %s:%s -t "%s" "%s"',
             $parameters,
-            escapeshellarg($this->config['hostname'] . ':' . $this->config['port']),
-            escapeshellarg(realpath($this->config['documentRoot'])),
-            escapeshellarg(__DIR__ . '/Router.php')
+            $this->config['hostname'],
+            $this->config['port'],
+            realpath($this->config['documentRoot']),
+            __DIR__ . '/Router.php'
         );
 
         return $command;
