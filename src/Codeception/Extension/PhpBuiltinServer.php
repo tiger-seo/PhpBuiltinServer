@@ -6,6 +6,7 @@
 namespace Codeception\Extension;
 
 use Codeception\Configuration;
+use Codeception\Exception\ModuleConfig as ModuleConfigException;
 use Codeception\Platform\Extension;
 use Codeception\Exception\Extension as ExtensionException;
 
@@ -15,6 +16,7 @@ class PhpBuiltinServer extends Extension
         'suite.before' => 'beforeSuite'
     ];
 
+    private $requiredFields = ['hostname', 'port', 'documentRoot'];
     private $resource;
     private $pipes;
 
@@ -25,6 +27,7 @@ class PhpBuiltinServer extends Extension
         }
 
         parent::__construct($config, $options);
+        $this->validateConfig();
 
         if (
             !array_key_exists('startDelay', $this->config)
@@ -33,16 +36,9 @@ class PhpBuiltinServer extends Extension
             $this->config['startDelay'] = 1;
         }
 
-        $this->startServer();
-
-        $resource = $this->resource;
-        register_shutdown_function(
-            function () use ($resource) {
-                if (is_resource($resource)) {
-                    proc_terminate($resource);
-                }
-            }
-        );
+        if (!array_key_exists('autostart', $this->config) || $this->config['autostart']) {
+            $this->startServer();
+        }
     }
 
     public function __destruct()
@@ -80,8 +76,17 @@ class PhpBuiltinServer extends Extension
         }
         $parameters .= ' -dcodecept.access_log=' . escapeshellarg(Configuration::logDir() . 'phpbuiltinserver.access_log.txt');
 
+        if (PHP_OS !== 'WINNT' && PHP_OS !== 'WIN32') {
+            // Platform uses POSIX process handling. Use exec to avoid
+            // controlling the shell process instead of the PHP
+            // interpreter.
+            $exec = 'exec ';
+        } else {
+            $exec = '';
+        }
+
         $command = sprintf(
-            PHP_BINARY . ' %s -S %s -t %s %s',
+            $exec . PHP_BINARY . ' %s -S %s:%s -t "%s" "%s"',
             $parameters,
             escapeshellarg($this->config['hostname'] . ':' . $this->config['port']),
             escapeshellarg(realpath($this->config['documentRoot'])),
@@ -91,9 +96,49 @@ class PhpBuiltinServer extends Extension
         return $command;
     }
 
-    private function startServer()
+    private function isRemoteDebug()
     {
-        if ($this->resource !== null) {
+        // compatibility with Codeception before 1.7.1
+        if (method_exists('\Codeception\Configuration', 'isExtensionEnabled')) {
+            return Configuration::isExtensionEnabled('Codeception\Extension\RemoteDebug');
+        } else {
+            return false;
+        }
+    }
+
+    private function validateConfig()
+    {
+        $fields = array_keys($this->config);
+        if (array_intersect($this->requiredFields, $fields) != $this->requiredFields) {
+            throw new ModuleConfigException(
+                get_class($this),
+                "\nConfig: " . implode(', ', $this->requiredFields) . " are required\n
+                Please, update the configuration and set all the required fields\n\n"
+            );
+        }
+
+        if (false === realpath($this->config['documentRoot'])) {
+            throw new ModuleConfigException(
+                get_class($this),
+                "\nDocument root does not exist. Please, update the configuration.\n\n"
+            );
+        }
+
+        if (false === is_dir($this->config['documentRoot'])) {
+            throw new ModuleConfigException(
+                get_class($this),
+                "\nDocument root must be a directory. Please, update the configuration.\n\n"
+            );
+        }
+    }
+
+    public function isRunning() {
+        return (isset($this->resource) && $this->resource !== null);
+    }
+
+    public function startServer()
+    {
+        if ($this->isRunning()) {
             return;
         }
 
@@ -116,14 +161,23 @@ class PhpBuiltinServer extends Extension
             throw new ExtensionException($this, 'Failed to start server.');
         }
 
+        $resource = $this->resource;
+        register_shutdown_function(
+            function () use ($resource) {
+                if (is_resource($resource)) {
+                    proc_terminate($resource);
+                }
+            }
+        );
+
         if ($this->config['startDelay'] > 0) {
             sleep($this->config['startDelay']);
         }
     }
 
-    private function stopServer()
+    public function stopServer()
     {
-        if ($this->resource !== null) {
+        if ($this->isRunning()) {
             foreach ($this->pipes AS $pipe) {
                 if (is_resource($pipe)) {
                     fclose($pipe);
@@ -131,16 +185,6 @@ class PhpBuiltinServer extends Extension
             }
             proc_terminate($this->resource, 2);
             unset($this->resource);
-        }
-    }
-
-    private function isRemoteDebug()
-    {
-        // compatibility with Codeception before 1.7.1
-        if (method_exists('\Codeception\Configuration', 'isExtensionEnabled')) {
-            return Configuration::isExtensionEnabled('Codeception\Extension\RemoteDebug');
-        } else {
-            return false;
         }
     }
 
