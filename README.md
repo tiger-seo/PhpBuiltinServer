@@ -64,3 +64,27 @@ extensions:
             startDelay: 1
             phpIni: /etc/php5/apache2/php.ini
 ```
+
+### example for enviroment variables
+``` yaml
+paths:
+    tests: .
+    log: _log
+    data: _data
+    helpers: _helpers
+extensions:
+    enabled:
+        - Codeception\Extension\PhpBuiltinServer
+    config:
+        Codeception\Extension\PhpBuiltinServer:
+            hostname: localhost
+            port: 8000
+            documentRoot: _data
+            startDelay: 1
+            phpIni: /etc/php5/apache2/php.ini
+            environmentVariables:
+                RUN_MODE: testing
+                XDEBUG_CONFIG: idekey=session_name
+            # Enable environment variables for environment variables
+            variableOrder: EGPCS
+```

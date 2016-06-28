@@ -1,4 +1,12 @@
 <!DOCTYPE html>
 <html>
-<body>It work's</body>
+<body>
+<?php
+if (isset($_ENV['PHPBUILTINSERVER_TEST'])) {
+?>
+It work's
+<?php
+}
+?>
+</body>
 </html>
