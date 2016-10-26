@@ -10,7 +10,7 @@ Codeception extension to start and stop PHP built-in web server for your tests.
 
 ## Minimum requirements
 
-* Codeception 2.0
+* Codeception 2.1
 * PHP 5.4
 
 ## Installation
