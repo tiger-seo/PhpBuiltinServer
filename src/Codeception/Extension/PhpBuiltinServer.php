@@ -6,7 +6,7 @@
 namespace Codeception\Extension;
 
 use Codeception\Configuration;
-use Codeception\Exception\ModuleConfig as ModuleConfigException;
+use Codeception\Exception\ModuleConfigException;
 use Codeception\Platform\Extension;
 use Codeception\Exception\Extension as ExtensionException;
 
