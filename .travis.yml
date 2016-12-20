@@ -7,12 +7,12 @@ php:
   - 7.0
 
 env:
-  - CODECEPTION_VERSION="2.1"
-  - CODECEPTION_VERSION="2.2"
+  - CODECEPTION_VERSION="2.1" DEPENDENCY_PACKAGES=""
+  - CODECEPTION_VERSION="2.2" DEPENDENCY_PACKAGES="facebook/webdriver:1.x phpunit/phpunit:>4.8.20"
 
 before_script:
   - composer install -n --prefer-dist --dev
-  - composer require codeception/codeception:${CODECEPTION_VERSION}
+  - composer require codeception/codeception:${CODECEPTION_VERSION} ${DEPENDENCY_PACKAGES}
 
 script:
   - bin/codecept build
