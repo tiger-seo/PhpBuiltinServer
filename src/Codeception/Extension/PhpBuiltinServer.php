@@ -186,4 +186,35 @@ class PhpBuiltinServer extends Extension
     {
         // dummy to keep reference to this instance, so that it wouldn't be destroyed immediately
     }
+
+    /**
+     * Suite Init.
+     *
+     * The event with suite, result and settings.
+     * 
+     * @source https://github.com/grantlucas/phantoman/blob/master/src/Phantoman.php#L302
+     * @param \Codeception\Event\SuiteEvent $e
+     * @throws \Codeception\Exception\ExtensionException
+     */
+    public function suiteInit(SuiteEvent $e)
+    {
+        // Check if PhantomJS should only be started for specific suites.
+        if (isset($this->config['suites'])) {
+            if (is_string($this->config['suites'])) {
+                $suites = [$this->config['suites']];
+            } else {
+                $suites = $this->config['suites'];
+            }
+            // If the current suites aren't in the desired array, return without
+            // starting PhantomJS.
+            if (!in_array($e->getSuite()->getBaseName(), $suites, true)
+                && !in_array($e->getSuite()->getName(), $suites, true)) {
+                return;
+            }
+        }
+
+        // Start the builtInServer.
+        $this->startServer();
+    }
 }
+
