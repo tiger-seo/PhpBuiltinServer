@@ -218,4 +218,3 @@ class PhpBuiltinServer extends Extension
     }
 }
 
-}
