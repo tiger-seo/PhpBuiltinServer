@@ -1339,7 +1339,7 @@ class WebGuy extends \Codeception\Actor
      *
      * ``` php
      * <?php
-     * // file is stored in 'tests/_data/prices.xls'
+     * // file is stored in 'tests/data/prices.xls'
      * $I->attachFile('input[@type="file"]', 'prices.xls');
      * ?>
      * ```

@@ -1,9 +1,9 @@
 <?php
 
-
+use Codeception\Exception\ModuleConfigException;
 use Codeception\Extension\PhpBuiltinServer;
 
-class Test extends \Codeception\TestCase\Test
+class Test extends \Codeception\Test\Unit
 {
     /**
      * @var \UnitGuy
@@ -22,14 +22,16 @@ class Test extends \Codeception\TestCase\Test
 
     public function testExceptionIfRequiredFieldsAreNotMet()
     {
-        $this->setExpectedExceptionRegExp('Codeception\Exception\ModuleConfigException', '/set all the required fields/');
+        $this->expectException(ModuleConfigException::class);
+        $this->expectExceptionMessageRegExp('/set all the required fields/');
 
         new PhpBuiltinServer([], []);
     }
 
     public function testExceptionIfDocumentRootDoesNotExist()
     {
-        $this->setExpectedExceptionRegExp('Codeception\Exception\ModuleConfigException', '/Document root does not exist/');
+        $this->expectException(ModuleConfigException::class);
+        $this->expectExceptionMessageRegExp('/Document root does not exist/');
 
         $config = [
             'hostname'     => 'localhost',
@@ -42,7 +44,8 @@ class Test extends \Codeception\TestCase\Test
 
     public function testExceptionIfDocumentRootIsNotADirectory()
     {
-        $this->setExpectedExceptionRegExp('Codeception\Exception\ModuleConfigException', '/Document root must be a directory/');
+        $this->expectException(ModuleConfigException::class);
+        $this->expectExceptionMessageRegExp('/Document root must be a directory/');
 
         $config = [
             'hostname'     => 'localhost',
@@ -59,7 +62,7 @@ class Test extends \Codeception\TestCase\Test
             'hostname'     => 'localhost',
             'port'         => '8000',
             'autostart'    => false,
-            'documentRoot' => 'tests/_data'
+            'documentRoot' => 'tests/data'
         ];
 
         $server = new PhpBuiltinServer($config, []);
@@ -72,7 +75,7 @@ class Test extends \Codeception\TestCase\Test
             'hostname'     => 'localhost',
             'port'         => '8000',
             'autostart'    => true,
-            'documentRoot' => 'tests/_data'
+            'documentRoot' => 'tests/data'
         ];
 
         $server = new PhpBuiltinServer($config, []);

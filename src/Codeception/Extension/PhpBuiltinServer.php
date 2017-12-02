@@ -7,7 +7,7 @@ namespace Codeception\Extension;
 
 use Codeception\Configuration;
 use Codeception\Exception\ModuleConfigException;
-use Codeception\Platform\Extension;
+use Codeception\Extension;
 use Codeception\Exception\ExtensionException;
 
 class PhpBuiltinServer extends Extension

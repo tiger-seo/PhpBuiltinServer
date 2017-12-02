@@ -1,11 +1,11 @@
 paths:
     tests: tests
-    log: tests/_log
-    data: tests/_data
-    helpers: tests/_helpers
+    log: tests/log
+    data: tests/data
+    support: tests/support
 settings:
     suite_class: \PHPUnit_Framework_TestSuite
-    colors: false
+    colors: true
     memory_limit: 1024M
     log: true
 modules:
@@ -19,5 +19,5 @@ extensions:
         Codeception\Extension\PhpBuiltinServer:
             hostname: localhost
             port: 8000
-            documentRoot: tests/_data
+            documentRoot: tests/data
             startDelay: 1
