@@ -96,12 +96,7 @@ class PhpBuiltinServer extends Extension
 
     private function isRemoteDebug()
     {
-        // compatibility with Codeception before 1.7.1
-        if (method_exists('\Codeception\Configuration', 'isExtensionEnabled')) {
-            return Configuration::isExtensionEnabled('Codeception\Extension\RemoteDebug');
-        } else {
-            return false;
-        }
+        return Configuration::isExtensionEnabled('Codeception\Extension\RemoteDebug');
     }
 
     private function validateConfig()

@@ -75,7 +75,8 @@ class Test extends \Codeception\Test\Unit
             'hostname'     => 'localhost',
             'port'         => '8000',
             'autostart'    => true,
-            'documentRoot' => 'tests/data'
+            'documentRoot' => 'tests/data',
+            'startDelay'   => 0
         ];
 
         $server = new PhpBuiltinServer($config, []);
