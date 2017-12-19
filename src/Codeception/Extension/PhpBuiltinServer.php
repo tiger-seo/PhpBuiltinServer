@@ -7,7 +7,7 @@ namespace Codeception\Extension;
 
 use Codeception\Configuration;
 use Codeception\Exception\ModuleConfigException;
-use Codeception\Platform\Extension;
+use Codeception\Extension;
 use Codeception\Exception\ExtensionException;
 
 class PhpBuiltinServer extends Extension
@@ -97,12 +97,7 @@ class PhpBuiltinServer extends Extension
 
     private function isRemoteDebug()
     {
-        // compatibility with Codeception before 1.7.1
-        if (method_exists('\Codeception\Configuration', 'isExtensionEnabled')) {
-            return Configuration::isExtensionEnabled('Codeception\Extension\RemoteDebug');
-        } else {
-            return false;
-        }
+        return Configuration::isExtensionEnabled('Codeception\Extension\RemoteDebug');
     }
 
     private function validateConfig()

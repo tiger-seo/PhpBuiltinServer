@@ -1,6 +1,7 @@
 .idea
 composer.phar
 bin
-tests/_log/*
-!tests/_log/.gitkeep
+tests/log/*
+!tests/log/.gitkeep
+tests/support/_generated
 vendor
