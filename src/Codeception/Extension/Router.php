@@ -14,7 +14,7 @@ class Router
         $directoryIndex = get_cfg_var('codecept.directory_index') ?: 'index.php';
 
         $documentRoot = $_SERVER['DOCUMENT_ROOT'];
-        $requestUri   = $_SERVER['REQUEST_URI'];
+        $requestUri   = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $filePath     = $documentRoot . '/' . ltrim($requestUri, '/');
 
         if ($accessLog) {
