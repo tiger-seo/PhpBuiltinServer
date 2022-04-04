@@ -62,6 +62,9 @@ class PhpBuiltinServer extends Extension
         if (isset($this->config['router'])) {
             $parameters .= ' -dcodecept.user_router="' . $this->config['router'] . '"';
         }
+        if (isset($this->config['alwaysUseRouter'])) {
+            $parameters .= ' -dcodecept.always_use_router="' . $this->config['alwaysUseRouter'] . '"';
+        }
         if (isset($this->config['directoryIndex'])) {
             $parameters .= ' -dcodecept.directory_index="' . $this->config['directoryIndex'] . '"';
         }

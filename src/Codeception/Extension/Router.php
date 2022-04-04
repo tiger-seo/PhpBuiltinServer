@@ -31,7 +31,7 @@ class Router
             file_put_contents($accessLog, $logEntry, FILE_APPEND);
         }
 
-        if (file_exists($filePath) && is_file($filePath)) {
+        if (file_exists($filePath) && is_file($filePath) && !get_cfg_var('codecept.always_use_router')) {
             return false; // serve the requested resource as-is.
         } elseif ($userRouter) {
             return $userRouter;

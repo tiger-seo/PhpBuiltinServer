@@ -67,3 +67,7 @@ extensions:
             startDelay: 1
             phpIni: /etc/php5/apache2/php.ini
 ```
+### additional configuration options:
+Option Name | Value | Description
+--- | --- | ---
+alwaysUseRouter | boolean (default: false) | If enabled, all requests will use the specified router file regardless of if the file requested exists in the documentRoot
