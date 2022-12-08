@@ -13,7 +13,8 @@ use Codeception\Exception\ExtensionException;
 class PhpBuiltinServer extends Extension
 {
     static $events = [
-        'suite.before' => 'beforeSuite'
+        'suite.before' => 'beforeSuite',
+        'suite.after' => 'afterSuite'
     ];
 
     private $requiredFields = ['hostname', 'port', 'documentRoot'];
@@ -125,10 +126,20 @@ class PhpBuiltinServer extends Extension
         }
     }
 
+    /**
+     * Determines if running.
+     *
+     * @return     boolean  True if running, False otherwise.
+     */
     public function isRunning() {
         return (isset($this->resource) && $this->resource !== null);
     }
 
+    /**
+     * Starts a server.
+     *
+     * @throws     \Codeception\Exception\ExtensionException
+     */
     public function startServer()
     {
         if ($this->isRunning()) {
@@ -164,6 +175,9 @@ class PhpBuiltinServer extends Extension
         }
     }
 
+    /**
+     * Stops a server.
+     */
     public function stopServer()
     {
         if ($this->isRunning()) {
@@ -177,8 +191,19 @@ class PhpBuiltinServer extends Extension
         }
     }
 
+    /**
+     * @inheritdoc
+     */
     public function beforeSuite()
     {
-        // dummy to keep reference to this instance, so that it wouldn't be destroyed immediately
+        $this->startServer();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function afterSuite()
+    {
+        $this->stopServer();
     }
 }
