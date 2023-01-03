@@ -7,26 +7,26 @@ namespace Codeception\Extension;
 
 use Codeception\Configuration;
 use Codeception\Exception\ModuleConfigException;
-use Codeception\Extension;
 use Codeception\Exception\ExtensionException;
+use Codeception\Module;
 
-class PhpBuiltinServer extends Extension
+class PhpBuiltinServer extends Module
 {
     static $events = [
         'suite.before' => 'beforeSuite'
     ];
 
-    private $requiredFields = ['hostname', 'port', 'documentRoot'];
+    protected array $requiredFields = ['hostname', 'port', 'documentRoot'];
     private $resource;
     private $pipes;
 
-    public function __construct($config, $options)
+    public function __construct(\Codeception\Lib\ModuleContainer $container, $config)
     {
         if (version_compare(PHP_VERSION, '5.4', '<')) {
             throw new ExtensionException($this, 'Requires PHP built-in web server, available since PHP 5.4.0.');
         }
 
-        parent::__construct($config, $options);
+        parent::__construct($container, $config);
         $this->validateConfig();
 
         if (
@@ -71,7 +71,7 @@ class PhpBuiltinServer extends Extension
         if ($this->isRemoteDebug()) {
             $parameters .= ' -dxdebug.remote_enable=1';
         }
-        $parameters .= ' -dcodecept.access_log="' . Configuration::logDir() . 'phpbuiltinserver.access_log.txt' . '"';
+        $parameters .= ' -dcodecept.access_log="' . Configuration::baseDir() . 'tests/_output/phpbuiltinserver.access_log.txt' . '"';
 
         if (PHP_OS !== 'WINNT' && PHP_OS !== 'WIN32') {
             // Platform uses POSIX process handling. Use exec to avoid
@@ -99,7 +99,7 @@ class PhpBuiltinServer extends Extension
         return Configuration::isExtensionEnabled('Codeception\Extension\RemoteDebug');
     }
 
-    private function validateConfig()
+    protected function validateConfig(): void
     {
         $fields = array_keys($this->config);
         if (array_intersect($this->requiredFields, $fields) != $this->requiredFields) {
@@ -138,16 +138,16 @@ class PhpBuiltinServer extends Extension
         $command        = $this->getCommand();
         $descriptorSpec = [
             ['pipe', 'r'],
-            ['file', Configuration::logDir() . 'phpbuiltinserver.output.txt', 'w'],
-            ['file', Configuration::logDir() . 'phpbuiltinserver.errors.txt', 'a']
+            ['file', Configuration::baseDir() . 'tests/_output/phpbuiltinserver.output.txt', 'w'],
+            ['file', Configuration::baseDir() . 'tests/_output/phpbuiltinserver.errors.txt', 'a']
         ];
         $this->resource = proc_open($command, $descriptorSpec, $this->pipes, null, null, ['bypass_shell' => true]);
         if (!is_resource($this->resource)) {
-            throw new ExtensionException($this, 'Failed to start server.');
+            throw new ExtensionException($this, 'Failed to start server (no resource)');
         }
         if (!proc_get_status($this->resource)['running']) {
             proc_close($this->resource);
-            throw new ExtensionException($this, 'Failed to start server.');
+            throw new ExtensionException($this, 'Failed to start server (not running)');
         }
 
         $resource = $this->resource;
