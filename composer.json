@@ -1,5 +1,5 @@
 {
-    "name": "codeception/phpbuiltinserver",
+    "name": "robchett/phpbuiltinserver",
     "description": "PhpBuiltinServer extension for Codeception",
     "keywords": ["codeception"],
     "minimum-stability": "stable",
@@ -8,6 +8,10 @@
         {
             "name": "tiger-seo",
             "email": "tiger.seo@gmail.com"
+        },
+        {
+            "name": "Rob Chett",
+            "email": "robchett@gmail.com"
         }
     ],
     "require": {
