@@ -16,7 +16,7 @@ class PhpBuiltinServer extends Module
         'suite.before' => 'beforeSuite'
     ];
 
-    protected array $requiredFields = ['hostname', 'port', 'documentRoot'];
+    protected array $requiredFields = ['hostname', 'documentRoot'];
     private $resource;
     private $pipes;
 
@@ -82,16 +82,33 @@ class PhpBuiltinServer extends Module
             $exec = '';
         }
 
+        $port = $this->findFreePort();
+        $url = "{$this->config['hostname']}:$port";
+        if ($this->hasModule('PhpBrowser')) {
+            $this->getModule('PhpBrowser')->_setConfig(['url' => 'http://' . $url]);
+        }
+        if ($this->hasModule('REST')) {
+            $this->getModule('REST')->_setConfig(['url' => 'http://' . $url]);
+        }
+
         $command = sprintf(
-            $exec . PHP_BINARY . ' %s -S %s:%s -t "%s" "%s"',
+            $exec . PHP_BINARY . ' %s -S %s -t "%s" "%s"',
             $parameters,
-            $this->config['hostname'],
-            $this->config['port'],
+            $url,
             realpath($this->config['documentRoot']),
             __DIR__ . '/Router.php'
         );
 
         return $command;
+    }
+
+    private function findFreePort(): int
+    {
+        $sock = socket_create_listen(0);
+        socket_getsockname($sock, $addr, $port);
+        socket_close($sock);
+
+        return $port;
     }
 
     private function isRemoteDebug()
