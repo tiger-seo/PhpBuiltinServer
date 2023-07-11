@@ -58,6 +58,8 @@ class PhpBuiltinServer extends Extension
      */
     private function getCommand()
     {
+        $codeCeptionSettings = Configuration::config()['settings'];
+
         $parameters = '';
         if (isset($this->config['router'])) {
             $parameters .= ' -dcodecept.user_router="' . $this->config['router'] . '"';
@@ -67,6 +69,12 @@ class PhpBuiltinServer extends Extension
         }
         if (isset($this->config['phpIni'])) {
             $parameters .= ' --php-ini "' . $this->config['phpIni'] . '"';
+        }
+        if (isset($codeCeptionSettings['error_level'])) {
+            $parameters .= ' --define error_level="' . $codeCeptionSettings['error_level'] . '"';
+        }
+        if (isset($codeCeptionSettings['memory_limit'])) {
+            $parameters .= ' --define memory_limit="' . $codeCeptionSettings['memory_limit'] . '"';
         }
         if ($this->isRemoteDebug()) {
             $parameters .= ' -dxdebug.remote_enable=1';
