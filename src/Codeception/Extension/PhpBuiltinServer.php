@@ -84,11 +84,12 @@ class PhpBuiltinServer extends Module
 
         $port = $this->findFreePort();
         $url = "{$this->config['hostname']}:$port";
-        if ($this->hasModule('PhpBrowser')) {
-            $this->getModule('PhpBrowser')->_setConfig(['url' => 'http://' . $url]);
-        }
-        if ($this->hasModule('REST')) {
-            $this->getModule('REST')->_setConfig(['url' => 'http://' . $url]);
+        foreach ($this->getModules() as $module) {
+            foreach ($module->_getConfig() as $key => $value) {
+                if (is_string($value) && str_contains($value, '%webserver%')) {
+                    $module->_setConfig([$key => str_replace('%webserver%', 'http://' . $url, $value)]);
+                }
+            }
         }
 
         $command = sprintf(
