@@ -1,8 +1,9 @@
 paths:
     tests: tests
-    log: tests/log
+    output: tests/_output
     data: tests/data
     support: tests/support
+actor_suffix: Tester
 settings:
     suite_class: \PHPUnit_Framework_TestSuite
     colors: true
@@ -21,3 +22,4 @@ extensions:
             port: 8000
             documentRoot: tests/data
             startDelay: 1
+            logDir: log
