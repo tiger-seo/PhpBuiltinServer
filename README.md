@@ -9,8 +9,8 @@ Codeception extension to start and stop PHP built-in web server for your tests.
 | **Codeception 2.0**      | **1.2.x**               | [![Build Status](https://secure.travis-ci.org/tiger-seo/PhpBuiltinServer.png?branch=v1.2.x)](http://travis-ci.org/tiger-seo/PhpBuiltinServer)        |
 | **Codeception 2.1, 2.2** | **1.3.x**               | [![Build Status](https://secure.travis-ci.org/tiger-seo/PhpBuiltinServer.png?branch=v1.3.x)](http://travis-ci.org/tiger-seo/PhpBuiltinServer)        |
 | **Codeception 2.3**      | **1.4.x**               | [![Build Status](https://secure.travis-ci.org/tiger-seo/PhpBuiltinServer.png?branch=v1.4.x)](http://travis-ci.org/tiger-seo/PhpBuiltinServer)        |
-| **Codeception 3.0, 4.0** | **master**              | [![Build Status](https://secure.travis-ci.org/tiger-seo/PhpBuiltinServer.png?branch=master)](http://travis-ci.org/tiger-seo/PhpBuiltinServer)        |
-| **Codeception 5.0** | **codeception_5**       | [![Build Status](https://secure.travis-ci.org/tiger-seo/PhpBuiltinServer.png?branch=codeception_5)](http://travis-ci.org/tiger-seo/PhpBuiltinServer) |
+| **Codeception 3.0, 4.0** | **codeception_3_4**     | [![Build Status](https://secure.travis-ci.org/tiger-seo/PhpBuiltinServer.png?branch=master)](http://travis-ci.org/tiger-seo/PhpBuiltinServer)        |
+| **Codeception 5.0** | **master**              | [![Build Status](https://secure.travis-ci.org/tiger-seo/PhpBuiltinServer.png?branch=codeception_5)](http://travis-ci.org/tiger-seo/PhpBuiltinServer) |
 
 ## Minimum requirements
 
