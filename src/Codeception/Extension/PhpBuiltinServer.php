@@ -20,14 +20,22 @@ class PhpBuiltinServer extends Extension
     private $resource;
     private $pipes;
 
+    private $logDir;
+
     public function __construct($config, $options)
     {
-        if (version_compare(PHP_VERSION, '5.4', '<')) {
-            throw new ExtensionException($this, 'Requires PHP built-in web server, available since PHP 5.4.0.');
+        if (version_compare(PHP_VERSION, '8.1', '<')) {
+            throw new ExtensionException($this, 'Requires PHP built-in web server, available since PHP 8.1.');
         }
 
         parent::__construct($config, $options);
         $this->validateConfig();
+
+        $this->logDir = Configuration::testsDir() . 'log/';
+
+        if (array_key_exists('logDir', $this->config)) {
+            $this->logDir = Configuration::testsDir() . $this->config['logDir'] . '/';
+        }
 
         if (
             !array_key_exists('startDelay', $this->config)
@@ -71,7 +79,7 @@ class PhpBuiltinServer extends Extension
         if ($this->isRemoteDebug()) {
             $parameters .= ' -dxdebug.remote_enable=1';
         }
-        $parameters .= ' -dcodecept.access_log="' . Configuration::logDir() . 'phpbuiltinserver.access_log.txt' . '"';
+        $parameters .= ' -dcodecept.access_log="' . $this->logDir . 'phpbuiltinserver.access_log.txt' . '"';
 
         if (PHP_OS !== 'WINNT' && PHP_OS !== 'WIN32') {
             // Platform uses POSIX process handling. Use exec to avoid
@@ -138,8 +146,8 @@ class PhpBuiltinServer extends Extension
         $command        = $this->getCommand();
         $descriptorSpec = [
             ['pipe', 'r'],
-            ['file', Configuration::logDir() . 'phpbuiltinserver.output.txt', 'w'],
-            ['file', Configuration::logDir() . 'phpbuiltinserver.errors.txt', 'a']
+            ['file', $this->logDir . 'phpbuiltinserver.output.txt', 'w'],
+            ['file', $this->logDir . 'phpbuiltinserver.errors.txt', 'a']
         ];
         $this->resource = proc_open($command, $descriptorSpec, $this->pipes, null, null, ['bypass_shell' => true]);
         if (!is_resource($this->resource)) {
